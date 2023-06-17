@@ -1,22 +1,17 @@
 import fastify from 'fastify'
-import { knex } from './database'
-import { randomUUID } from 'node:crypto'
 import 'dotenv/config'
+import { transactionsRoutes } from './routes/transactions'
+import cookie from '@fastify/cookie'
+
 const app = fastify()
 
-app.get('/db', async (request, reply) => {
-  const transactions = await knex('transactions')
-    .insert({
-      id: randomUUID(),
-      title: 'Teste',
-      amount: 100,
-    })
-    .returning('*')
-  return transactions
+app.register(cookie)
+
+app.addHook('preHandler', async (request, reply) => {
+  console.log(`[${request.method}] ${request.url}`)
 })
-app.get('/hello', async (request, reply) => {
-  const transactions = await knex('transactions').select('*')
-  return transactions
+app.register(transactionsRoutes, {
+  prefix: '/transaction',
 })
 
 app
