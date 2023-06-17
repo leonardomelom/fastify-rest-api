@@ -1,9 +1,22 @@
 import fastify from 'fastify'
-
+import { knex } from './database'
+import { randomUUID } from 'node:crypto'
+import 'dotenv/config'
 const app = fastify()
 
-app.get('/', async (request, reply) => {
-  return { hello: 'node.Js' }
+app.get('/db', async (request, reply) => {
+  const transactions = await knex('transactions')
+    .insert({
+      id: randomUUID(),
+      title: 'Teste',
+      amount: 100,
+    })
+    .returning('*')
+  return transactions
+})
+app.get('/hello', async (request, reply) => {
+  const transactions = await knex('transactions').select('*')
+  return transactions
 })
 
 app
