@@ -1,4 +1,14 @@
+
+#dependecies
 node_modules
 package-lock.json
-database/app.db
+
+#database
+database/*.db
+
+#enviroment
 .env
+.env.test
+
+#build
+build
